@@ -1,0 +1,3 @@
+#A work in progress...  
+My version of the parcel delivery robot from chapter 7 of Eloquent javaScript.  
+When finished it will generate a random list of parcels for the robot to deliver.  Then the robot will deliver them in an efficient manner based on the roads available as mapped.
