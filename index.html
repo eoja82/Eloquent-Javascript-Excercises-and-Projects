@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Parcel Delivery Robot</title>
+</head>
+<body>
+  
+
+<script>
+  const roads = [
+    "Alice's House-Bob's House",   "Alice's House-Cabin",
+    "Alice's House-Post Office",   "Bob's House-Town Hall",
+    "Daria's House-Ernie's House", "Daria's House-Town Hall",
+    "Ernie's House-Grete's House", "Grete's House-Farm",
+    "Grete's House-Shop",          "Marketplace-Farm",
+    "Marketplace-Post Office",     "Marketplace-Shop",
+    "Marketplace-Town Hall",       "Shop-Town Hall"
+  ];
+  
+  function creatMap(roads) {
+    let routes = Object.create(null);    //null, no Object.prototype
+    function fromTo(from, to) {
+      routes[from] ? routes[from].push(to) : routes[from] = [to];
+    }
+    roads.map( x => x.split("-"))        //split to array
+      .map(([from, to]) => {             //destructure array
+        fromTo(from, to);
+        fromTo(to, from);
+      });
+    return routes;
+  }
+  
+  let routes = creatMap(roads);
+  console.log(routes);
+  
+  function randomLocation() {
+    let places = Object.keys(routes);
+    let num = Math.floor(Math.random() * places.length);
+    return places[num];
+  }
+  
+  function createParcelList(quantity) {
+    let parcels = [], i = 0;
+    for (i; i < quantity; i++) {
+      let from = randomLocation();
+      let to = randomLocation();
+      if (from === to) i--;
+      if (from !== to) parcels.push([from, to]);
+    }
+    return parcels;
+  }
+  let parcels = createParcelList(5);
+  console.log(parcels);
+  console.log("parcels lenght " +  parcels.length); 
+  let pickedUp = [];
+  let destination = [];
+ 
+  function deliverParcels(from, to) {
+    console.log("deliverParcels pre parcels = " + parcels);
+    parcels = parcels.filter( ([from, to]) => !(from !== from && to !== to));
+    console.log("deliverParcels parcels = " + parcels);
+    console.log("deliverParcels pre pickedUp = " + pickedUp);
+    pickedUp = pickedUp.filter( ([from, to]) => !(from !== from && to !== to));
+    console.log("deliverParcels pickedUp = " + pickedUp);
+  }
+
+  function pickUpParcels(place) {                 //use to determine destination
+    parcels.map( ([from, to]) => {
+      if (place === from) pickedUp.push([from, to]);
+    })
+  }
+
+  function move(from, to) {
+    pickUpParcels(to);
+    deliverParcels(from, to);
+  }
+
+  function getDestination() {
+    let nextPlace;
+    console.log("pickedup " + pickedUp.lenght);
+    console.log("getDestination parcels[0][0] " + parcels[0][0]);
+    if (pickedUp.length === undefined) nextPlace = parcels[0][0];
+    if (pickedUp.length > 0) nextPlace = pickedUp[0][1];
+    console.log("next = " + nextPlace);
+    destination.push(nextPlace);
+  }
+
+  function getRoute(from, to) {
+    let next = "";
+    if (routes[from].includes(to)) { return; }     //direct route from - to
+    else { 
+      for (let i = 0; i < routes.lenght; i++) {    //not direct route
+        if (routes[i].includes(to)) {
+          destination.unshift(Object.keys(routes[i]));
+          break;
+        }
+      }
+    }
+  }
+
+function completeRoute(start) { 
+  pickUpParcels(start);
+  console.log("first start " + start);
+   
+  for (let turns = 0; ; turns++) {
+    console.log("turns = " + turns);
+    console.log("parcels[0][0] = " + parcels[0][0]);
+    console.log("parcels length for loop " +  parcels.length);
+    if (parcels.lenght === 0) {
+      console.log(`Delivered in ${turns} turns`);
+      break;
+    }  
+    if (destination.lenght === undefined) { 
+      getDestination(); 
+    }; 
+    console.log("destination " + destination);
+    getRoute(start, destination[0]);
+    console.log("route " + destination[0]);
+    move(start, destination[0]);
+    start = destination[0]
+    console.log("start " + start);
+    destination.shift();
+    console.log("new destination " + destination);
+  }
+}
+completeRoute("Post Office");
+//create parcel list
+//have start location
+// pick up and drop off packages
+// update parcels list
+//determine next destination
+//determine next move if not direct to next destination
+// move to next location
+//pick up and drop off
+//update parcels list
+//continue to destination
+//repeat until no parcels left
+
+</script>
+</body>
+</html>
