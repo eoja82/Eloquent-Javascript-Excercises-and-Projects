@@ -54,23 +54,24 @@
   }
   let parcels = createParcelList(5);
   console.log(parcels);
-  console.log("parcels lenght " +  parcels.length); 
+  //console.log("parcels lenght " +  parcels.length); 
   let pickedUp = [];
   let destination = [];
  
   function deliverParcels(from, to) {
-    console.log("deliverParcels pre parcels = " + parcels);
-    parcels = parcels.filter( ([from, to]) => !(from !== from && to !== to));
-    console.log("deliverParcels parcels = " + parcels);
-    console.log("deliverParcels pre pickedUp = " + pickedUp);
-    pickedUp = pickedUp.filter( ([from, to]) => !(from !== from && to !== to));
-    console.log("deliverParcels pickedUp = " + pickedUp);
+    pickedUp = pickedUp.filter(([place, address]) => {
+      to !== address
+    });
   }
 
-  function pickUpParcels(place) {                 //use to determine destination
-    parcels.map( ([from, to]) => {
-      if (place === from) pickedUp.push([from, to]);
+  function pickUpParcels(to) {                 //use to determine destination
+    parcels.map( ({place, address}, i) => {
+      if (place === to) {
+        pickedUp.push([place, address]);      //add to pickedUp
+        parcels.splice(i, 1);                 //remove from parcels list
+      }  
     })
+    console.log("pickedUp: " + pickedUp);
   }
 
   function move(from, to) {
@@ -79,13 +80,18 @@
   }
 
   function getDestination() {
-    let nextPlace;
-    console.log("pickedup " + pickedUp.lenght);
-    console.log("getDestination parcels[0][0] " + parcels[0][0]);
-    if (pickedUp.length === undefined) nextPlace = parcels[0][0];
-    if (pickedUp.length > 0) nextPlace = pickedUp[0][1];
-    console.log("next = " + nextPlace);
-    destination.push(nextPlace);
+    let nextPlace = "";
+    //console.log("pickedup " + pickedUp.lenght);
+    //console.log("getDestination parcels[0][0] " + parcels[0][0]);
+    if (pickedUp.length === undefined) {
+      nextPlace = parcels[0][0];
+      console.log("next = " + nextPlace);
+      destination.push(nextPlace);
+    } else if (pickedUp.length > 0) {
+      nextPlace = pickedUp[0][1];
+      console.log("next = " + nextPlace);
+      destination.push(nextPlace);
+    }
   }
 
   function getRoute(from, to) {
@@ -96,19 +102,22 @@
         if (routes[i].includes(to)) {
           destination.unshift(Object.keys(routes[i]));
           break;
+        } else {
+          //what if no single road in between?
         }
       }
     }
   }
 
 function completeRoute(start) { 
-  pickUpParcels(start);
-  console.log("first start " + start);
+  let at = start;
+  pickUpParcels(at);
+  //console.log("first start " + start);
    
   for (let turns = 0; ; turns++) {
     console.log("turns = " + turns);
-    console.log("parcels[0][0] = " + parcels[0][0]);
-    console.log("parcels length for loop " +  parcels.length);
+    //console.log("parcels[0][0] = " + parcels[0][0]);
+    //console.log("parcels length for loop " +  parcels.length);
     if (parcels.lenght === 0) {
       console.log(`Delivered in ${turns} turns`);
       break;
@@ -117,11 +126,11 @@ function completeRoute(start) {
       getDestination(); 
     }; 
     console.log("destination " + destination);
-    getRoute(start, destination[0]);
+    getRoute(at, destination[0]);
     console.log("route " + destination[0]);
-    move(start, destination[0]);
-    start = destination[0]
-    console.log("start " + start);
+    move(at, destination[0]);
+    at = destination[0]
+    console.log("at " + at);
     destination.shift();
     console.log("new destination " + destination);
   }
