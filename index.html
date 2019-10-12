@@ -99,7 +99,6 @@
 
   function getRoute(from, to) {
     console.log("got route");
-    let routeLength = Object.keys(routes);
     if (routes[from].includes(to)) {    //direct route from - to
       console.log("direct route");
       return;
