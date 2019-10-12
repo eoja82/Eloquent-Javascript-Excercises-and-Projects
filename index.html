@@ -59,52 +59,59 @@
   let destination = [];
  
   function deliverParcels(from, to) {
+    console.log("delivered");
     pickedUp = pickedUp.filter(([place, address]) => {
       to !== address
     });
+    console.log("pickedUp = " + pickedUp);
   }
 
-  function pickUpParcels(to) {                 //use to determine destination
-    parcels.map( ({place, address}, i) => {
-      if (place === to) {
-        pickedUp.push([place, address]);      //add to pickedUp
+  function pickUpParcels(to) {               //use to determine destination
+    console.log("picked up");               
+    parcels.map( (x, i) => {
+      if (x[0] === to) {
+        pickedUp.push([x]);      //add to pickedUp
         parcels.splice(i, 1);                 //remove from parcels list
       }  
     })
-    console.log("pickedUp: " + pickedUp);
+    console.log("pickedUp = " + pickedUp);
   }
 
   function move(from, to) {
+    console.log("moved");
     pickUpParcels(to);
     deliverParcels(from, to);
   }
 
   function getDestination() {
     let nextPlace = "";
-    //console.log("pickedup " + pickedUp.lenght);
+    console.log("got destination");
+    //console.log("pickedUp lenght " + pickedUp.length);
     //console.log("getDestination parcels[0][0] " + parcels[0][0]);
-    if (pickedUp.length === undefined) {
+    if (pickedUp.length === 0) {
       nextPlace = parcels[0][0];
-      console.log("next = " + nextPlace);
+      console.log("nextPlace = " + nextPlace);
       destination.push(nextPlace);
     } else if (pickedUp.length > 0) {
       nextPlace = pickedUp[0][1];
-      console.log("next = " + nextPlace);
+      console.log("nextPlace = " + nextPlace);
       destination.push(nextPlace);
     }
   }
 
   function getRoute(from, to) {
-    let next = "";
-    if (routes[from].includes(to)) { return; }     //direct route from - to
-    else { 
-      for (let i = 0; i < routes.lenght; i++) {    //not direct route
-        if (routes[i].includes(to)) {
-          destination.unshift(Object.keys(routes[i]));
-          break;
-        } else {
-          //what if no single road in between?
-        }
+    console.log("got route");
+    let routeLength = Object.keys(routes);
+    if (routes[from].includes(to)) {    //direct route from - to
+      console.log("direct route");
+      return;
+    }     
+    console.log("not direct route");
+    for (let x in routes) {
+      if (routes[x].includes(to)) {
+        destination.unshift(x);
+        console.log("route destination " + destination);
+        break;
       }
     }
   }
@@ -117,22 +124,21 @@ function completeRoute(start) {
   for (let turns = 0; ; turns++) {
     console.log("turns = " + turns);
     //console.log("parcels[0][0] = " + parcels[0][0]);
-    //console.log("parcels length for loop " +  parcels.length);
+    console.log("parcels length for loop " +  parcels.length);
     if (parcels.lenght === 0) {
       console.log(`Delivered in ${turns} turns`);
       break;
     }  
-    if (destination.lenght === undefined) { 
-      getDestination(); 
-    }; 
-    console.log("destination " + destination);
+    console.log("dest lenght = " + destination.length);
+    if (destination.length === 0) getDestination();
+    //console.log("destination " + destination);
     getRoute(at, destination[0]);
     console.log("route " + destination[0]);
     move(at, destination[0]);
     at = destination[0]
-    console.log("at " + at);
+    //console.log("at " + at);
     destination.shift();
-    console.log("new destination " + destination);
+    //console.log("new destination " + destination);
   }
 }
 completeRoute("Post Office");
