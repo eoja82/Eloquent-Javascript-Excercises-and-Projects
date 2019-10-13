@@ -115,13 +115,13 @@
 
 function completeRoute(start) { 
   let at = start;
-  pickUpParcels(at);
+  pickUpParcels(at); 
    
   for (let turns = 0; ; turns++) {
     console.log("turns = " + turns);
-    console.log("pickedUp length for loop " + pickedUp.lenght);
+    console.log("pickedUp length for loop " + pickedUp.length);
     console.log("parcels length for loop " +  parcels.length);
-    if (parcels.lenght === 0) {
+    if (parcels.length === 0) {
       console.log(`Delivered in ${turns} turns`);
       break;
     }  
