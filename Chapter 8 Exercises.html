@@ -47,9 +47,16 @@
   };
 
   function withBoxUnlocked(body) {
-    // Your code here.
+    let locked = box.locked;
+    if (locked) box.unlock();
+    try {
+      return body();
+    }
+    finally {
+      if (locked) box.lock();
+    }
   }
-
+ 
   withBoxUnlocked(function() {
     box.content.push("gold piece");
   });
@@ -63,7 +70,9 @@
   }
   console.log(box.locked);
   // → true
-  
+  box.unlock();
+  console.log(box.content); //"gold piece"
+  console.log(box.locked); // false
 </script>
 </body>
 </html>
