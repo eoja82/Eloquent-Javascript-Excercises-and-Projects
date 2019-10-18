@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chapter 7 Exercises</title>
+</head>
+<body>
+<script>
+//PERSISTENT GROUP  
+class PGroup {
+  constructor(group) {
+    this.group = group;
+  }
+  add(toAdd) {
+    if (this.group.indexOf(toAdd) < 0) return new PGroup(this.group.concat(toAdd));
+    return this;
+  }
+  delete(toDelete) {
+    if (this.group.indexOf(toDelete) >= 0) return new PGroup(this.group.filter( x => x !== toDelete)); 
+    return this;
+  }
+  has(member) {
+    if (this.group.indexOf(member) < 0) return false;
+    return true;
+  }
+}
+PGroup.empty = new PGroup([]);
+let a = PGroup.empty.add("a");
+let ab = a.add("b");
+let b = ab.delete("a");
+console.log("PERSISTENT GROUP");
+console.log(b.has("b"));
+// → true
+console.log(a.has("b"));
+// → false
+console.log(b.has("a"));
+// → false
+
+/* class PGroup {
+  constructor(members) {
+    this.members = members;
+  }
+
+  add(value) {
+    if (this.has(value)) return this;
+    return new PGroup(this.members.concat([value]));
+  }
+
+  delete(value) {
+    if (!this.has(value)) return this;
+    return new PGroup(this.members.filter(m => m !== value));
+  }
+
+  has(value) {
+    return this.members.includes(value);
+  }
+}
+PGroup.empty = new PGroup([]);
+let a = PGroup.empty.add("a");
+let ab = a.add("b");
+let b = ab.delete("a");
+
+console.log(b.has("b"));
+// → true
+console.log(a.has("b"));
+// → false
+console.log(b.has("a"));
+// → false */
+</script>
+</body>
+</html>

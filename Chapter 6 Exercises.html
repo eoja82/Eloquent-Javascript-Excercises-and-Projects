@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chapter 6 Excersices</title>
+</head>
+<body>
+<script>
+  //A VECTOR TYPE
+  class Vec {
+    constructor (x, y) {
+      this.x = x;
+      this.y = y;
+    }
+    plus(newVec) {
+      return new Vec(this.x + newVec.x, this.y + newVec.y);
+    }
+    minus(newVec) {
+      return new Vec(this.x - newVec.x, this.y - newVec.y);
+    }
+    get length() {
+      return Math.sqrt((this.x * this.x) + (this.y * this.y));
+    }
+  }
+  console.log("A VECTOR TYPE");
+  console.log(new Vec(1, 2).plus(new Vec(2, 3)));
+  // → Vec{x: 3, y: 5}
+  console.log(new Vec(1, 2).minus(new Vec(2, 3)));
+  // → Vec{x: -1, y: -1}
+  console.log(new Vec(3, 4).length);
+  // → 5
+
+  //GROUPS
+  class Group {
+    constructor() {
+      this.group = [];
+    }
+    add(toAdd) {
+      if (this.group.indexOf(toAdd) < 0) this.group.push(toAdd);
+    }
+    delete(toDelete) {
+      let index = this.group.indexOf(toDelete);
+      if (index >= 0) { this.group.splice(index, 1); }
+    }
+    has(member) {
+      if (this.group.indexOf(member) < 0) return false;
+      return true;
+    }
+    static from(members) {
+      let group = new Group;
+      for (let x of members) {
+        group.add(x);
+      }
+      return group;
+    }
+    [Symbol.iterator]() {
+      return new GroupIterator(this);
+    }
+  }
+  console.log("GROUPS");
+  let group = Group.from([10, 20]);
+  console.log(group.has(10));
+  // → true
+  console.log(group.has(30));
+  // → false
+  group.add(10);
+  group.delete(10);
+  console.log(group.has(10));
+  // → false
+
+  //ITERABLE GROUPS
+  class GroupIterator {
+    constructor (group) {
+      this.x = 0;
+      this.group = group;
+    }
+    next() {
+      if (this.group.group.length <= this.x) { 
+        return {done: true}; 
+      } else {
+      let result = {value: this.group.group[this.x], done: false};
+      this.x++;
+      return result;
+      }
+    }  
+  }
+  console.log("ITERABLE GROUPS");
+  for (let value of Group.from(["a", "b", "c"])) {
+    console.log(value);
+  }
+
+  //BORROWING A METHOD
+  let map = {one: true, two: true, hasOwnProperty: true};
+
+  // Fix this call
+  //console.log(map.hasOwnProperty("one"));
+  console.log("BORROWING A METHOD");
+  console.log(Object.prototype.hasOwnProperty.call(map, "one"));
+  // → true
+</script>
+</body>
+</html>
