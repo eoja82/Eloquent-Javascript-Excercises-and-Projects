@@ -50,7 +50,7 @@
     let locked = box.locked;
     if (locked) box.unlock();
     try {
-      return body();
+      body();
     }
     finally {
       if (locked) box.lock();
