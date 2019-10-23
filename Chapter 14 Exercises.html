@@ -24,20 +24,38 @@
     ];
   
     let mountains = document.getElementById("mountains");
-    mountains.appendChild("table");
+    mountains.appendChild(document.createElement("table"));
+    let keys = Object.keys(MOUNTAINS[0]);
     let table = document.querySelector("table");
-    let headData = Object.keys(MOUNTAINS[0]);
-    function createTableRow(data, rowtype) {
+    
+    function createTableHeader(data, rowtype) {
       let tableRow = document.createElement("tr");
       for (let i = 0; i < data.length; i++) {
-        let text = document.createTextNode(data[i]);
         let cell = document.createElement(rowtype);
-        let row = cell.appendChild(text);
-        tableRow.appendChild(row);
-     }
+        cell.textContent = data[i];
+        tableRow.appendChild(cell);
+      }
      table.appendChild(tableRow);
     }
-    createTableRow(headData, "th");
+    createTableHeader(keys, "th");
+    
+    function createDataRow (data) {
+      
+      for (let i = 0; i < data.length; i++) {
+        let tableRow = document.createElement("tr");
+        for (let value in data[i]) {
+          let cell = document.createElement("td");
+          cell.textContent = data[i][value];
+          if (!isNaN(cell.textContent)) cell.style.textAlign = "right";
+          tableRow.appendChild(cell);
+        }
+        table.appendChild(tableRow);
+      }
+      
+    }
+    createDataRow(MOUNTAINS);
+
+
   </script>
 </body>
 </html>
