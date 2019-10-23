@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chapter 14 Exercises</title>
+</head>
+<body>
+  <!--BUILD A TABLE-->
+  <h1>Mountains</h1>
+
+  <div id="mountains"></div>
+  
+  <script>
+    const MOUNTAINS = [
+      {name: "Kilimanjaro", height: 5895, place: "Tanzania"},
+      {name: "Everest", height: 8848, place: "Nepal"},
+      {name: "Mount Fuji", height: 3776, place: "Japan"},
+      {name: "Vaalserberg", height: 323, place: "Netherlands"},
+      {name: "Denali", height: 6168, place: "United States"},
+      {name: "Popocatepetl", height: 5465, place: "Mexico"},
+      {name: "Mont Blanc", height: 4808, place: "Italy/France"}
+    ];
+  
+    let mountains = document.getElementById("mountains");
+    mountains.appendChild("table");
+    let table = document.querySelector("table");
+    let headData = Object.keys(MOUNTAINS[0]);
+    function createTableRow(data, rowtype) {
+      let tableRow = document.createElement("tr");
+      for (let i = 0; i < data.length; i++) {
+        let text = document.createTextNode(data[i]);
+        let cell = document.createElement(rowtype);
+        let row = cell.appendChild(text);
+        tableRow.appendChild(row);
+     }
+     table.appendChild(tableRow);
+    }
+    createTableRow(headData, "th");
+  </script>
+</body>
+</html>
