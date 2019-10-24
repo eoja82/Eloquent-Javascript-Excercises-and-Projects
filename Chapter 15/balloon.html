@@ -7,17 +7,22 @@
   <title>Balloon</title>
 </head>
 <body>
+  <h3>Press the up arrow to inflate the balloon. Press down arrow to deflate the balloon.  Be carefull if it gets too big it might pop!</h3>
+  <button>New Balloon</button>
   <p>🎈</p>
 
   <script>
     let p = document.querySelector("p");
+    let button = document.querySelector("button");
     let fontSize;
+    
     function updateFontSize(newSize) {
       fontSize = newSize;
       p.style.fontSize = fontSize + "px";
     }
     updateFontSize(25);
-    window.addEventListener("keydown", event => {
+    
+    function balloonSize(event) {
       if (event.key == "ArrowUp") {
         updateFontSize(fontSize *= 1.1);
       }
@@ -26,9 +31,16 @@
       }
       if (fontSize > 100) {
         p.textContent = "💥";
+        window.removeEventListener("keydown", balloonSize);
       }
       event.preventDefault();
+    }
+    
+    button.addEventListener("click", (event) => {
+      window.location.reload();
     });
+
+    window.addEventListener("keydown", balloonSize);
   </script>
 </body>
 </html>
