@@ -23,38 +23,31 @@
       {name: "Mont Blanc", height: 4808, place: "Italy/France"}
     ];
   
-    let mountains = document.getElementById("mountains");
-    mountains.appendChild(document.createElement("table"));
-    let keys = Object.keys(MOUNTAINS[0]);
-    let table = document.querySelector("table");
-    
-    function createTableHeader(data, rowtype) {
-      let tableRow = document.createElement("tr");
-      for (let i = 0; i < data.length; i++) {
-        let cell = document.createElement(rowtype);
-        cell.textContent = data[i];
-        tableRow.appendChild(cell);
-      }
-     table.appendChild(tableRow);
-    }
-    createTableHeader(keys, "th");
-    
-    function createDataRow (data) {
-      
-      for (let i = 0; i < data.length; i++) {
+    function buildTable (data) {
+      let keys = Object.keys(data[0]);
+      let table = document.createElement("table");
+      //build heading row
+      let headingRow = document.createElement("tr");
+      keys.map( data => {
+        let cell = document.createElement("th");
+        cell.textContent = data;
+        headingRow.appendChild(cell);
+      });
+      table.appendChild(headingRow);
+      //build data rows
+      data.map( data => {
         let tableRow = document.createElement("tr");
-        for (let value in data[i]) {
+        for (let value in data) {
           let cell = document.createElement("td");
-          cell.textContent = data[i][value];
+          cell.textContent = data[value];
           if (!isNaN(cell.textContent)) cell.style.textAlign = "right";
           tableRow.appendChild(cell);
         }
         table.appendChild(tableRow);
-      }
-      
+      });
+      return table;
     }
-    createDataRow(MOUNTAINS);
-
+    document.getElementById("mountains").appendChild(buildTable(MOUNTAINS));
 
   </script>
 </body>
