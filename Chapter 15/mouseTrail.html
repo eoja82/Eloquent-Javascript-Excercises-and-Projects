@@ -20,13 +20,21 @@
 <body>
 
 <script>
-  window.addEventListener("mousemove", event => {
+  
+  let trailArr = [];
+  for (let i = 0; i < 10; i++) {
     let trail = document.createElement("div");
-    trail.className = "trail";
-    trail.style.left = (event.pageX) + "px";
-    trail.style.top = (event.pageY) + "px";
-    document.body.appendChild(trail);
-  });
+    trailArr.push(trail);
+  }
+  let counter = 0;
+  window.addEventListener("mousemove", event => {
+    trailArr[counter].className = "trail";
+    trailArr[counter].style.left = (event.pageX - 4) + "px";
+    trailArr[counter].style.top = (event.pageY - 4) + "px";
+    document.body.appendChild(trailArr[counter]);
+    counter++;
+    if (counter > 9) counter = 0;
+  }); 
 </script>
 
 </body>
