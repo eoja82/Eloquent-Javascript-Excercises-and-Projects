@@ -15,49 +15,52 @@
 </tab-panel>
 
 <script>
-  let buttons = document.getElementsByClassName("tabButton");
-  console.log(buttons);
-  /* for (let i = 0; i < buttons.length; i++) {
-    console.log(buttons[1]);
-    //buttons[i].addEventListener("click", displayTab(buttons[i]));
-  }
-  console.log(buttons.item([0])); */
-  let dataTab = document.querySelectorAll("[data-tabname]");
-  //console.log(dataTab[0].getAttribute("data-tabname"));
-  function displayTab(number) {
-    dataTab.forEach( x => {
-      //console.log(x.getAttribute("data-tabname") === number);
-      if (x.getAttribute("data-tabname") === number) {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
-    });
-  }
-  displayTab("one");
   
   function asTabs(node) {
-    let tabPanel = document.getElementById("tabs");
     let children = node.children;
-    //console.log(children);
+    //console.log(children.length);
     //console.log(children[0].getAttribute("data-tabname"));
     let buttons = document.createElement("div");
     buttons.className = "buttonDiv";
     
     for (let i = 0; i < children.length; i++) {
       let newButton = document.createElement("button");
-      newButton.className = "tabButton";
       let buttonText = document.createTextNode(children[i].getAttribute("data-tabname"));
       newButton.appendChild(buttonText);
-      //console.log("newButton.textContent " + newButton.textContent);
+      newButton.setAttribute("data-tabButton", newButton.textContent)
       newButton.onclick = function() {
         displayTab(newButton.textContent);
       }
       buttons.appendChild(newButton);
     }
-    tabPanel.insertBefore(buttons, tabPanel.childNodes[0]);
+    node.insertBefore(buttons, node.childNodes[0]);
+
+    function displayTab(number) {
+      let dataTab = document.querySelectorAll("[data-tabname]");
+      //console.log(dataTab);
+      let tabButton = document.querySelectorAll("[data-tabButton]");
+      dataTab.forEach( x => {
+        if (x.getAttribute("data-tabname") === number) {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      });
+      tabButton.forEach( x => {
+        //console.log(x.getAttribute("data-tabButton") === number);
+        if (x.getAttribute("data-tabButton") === number) {
+          x.style.backgroundColor = "lightblue";
+        } else {
+          x.style.backgroundColor = "lightgray";
+        }
+      });
+    }
+    displayTab("one");
   }
+
   asTabs(document.querySelector("tab-panel"));
+
+
 </script>
   
 </body>
