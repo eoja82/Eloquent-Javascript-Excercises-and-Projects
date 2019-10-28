@@ -23,7 +23,42 @@
   ......##############..
   ......................`;
 
-  class Vec {
+  var Level = class Level {
+    constructor(plan) {
+      let rows = plan.trim().split("\n").map(l => [...l]);
+      this.height = rows.length;
+      this.width = rows[0].length;
+      this.startActors = [];
+
+      this.rows = rows.map((row, y) => {
+        return row.map((ch, x) => {
+          let type = levelChars[ch];
+          if (typeof type == "string") return type;
+          this.startActors.push(
+            type.create(new Vec(x, y), ch));
+          return "empty";
+        });
+      });
+    }
+  }
+
+  var State = class State {
+    constructor(level, actors, status) {
+      this.level = level;
+      this.actors = actors;
+      this.status = status;
+    }
+
+    static start(level) {
+      return new State(level, level.startActors, "playing");
+    }
+
+    get player() {
+      return this.actors.find(a => a.type == "player");
+    }
+  }
+
+  var Vec = class Vec {
     constructor(x, y) {
       this.x = x; this.y = y;
     }
@@ -35,7 +70,7 @@
     }
   }
 
-  class Player {
+  let Player = class Player {
     constructor(pos, speed) {
       this.pos = pos;
       this.speed = speed;
@@ -50,7 +85,7 @@
   }
   Player.prototype.size = new Vec(0.8, 1.5);
 
-  class Lava {
+  var Lava = class Lava {
     constructor(pos, speed, reset) {
       this.pos = pos;
       this.speed = speed;
@@ -71,7 +106,7 @@
   }
   Lava.prototype.size = new Vec(1, 1);
 
-  class Coin {
+  var Coin = class Coin {
     constructor(pos, basePos, wobble) {
       this.pos = pos;
       this.basePos = basePos;
@@ -88,41 +123,6 @@
   }
   Coin.prototype.size = new Vec(0.6, 0.6);
 
-  class Level {
-    constructor(plan) {
-      let rows = plan.trim().split("\n").map(l => [...l]);
-      this.height = rows.length;
-      this.width = rows[0].length;
-      this.startActors = [];
-
-      this.rows = rows.map((row, y) => {
-        return row.map((ch, x) => {
-          let type = levelChars[ch];
-          if (typeof type == "string") return type;
-          this.startActors.push(
-            type.create(new Vec(x, y), ch));
-          return "empty";
-        });
-      });
-    }
-  }
-
-  class State {
-    constructor(level, actors, status) {
-      this.level = level;
-      this.actors = actors;
-      this.status = status;
-    }
-
-    static start(level) {
-      return new State(level, level.startActors, "playing");
-    }
-
-    get player() {
-      return this.actors.find(a => a.type == "player");
-    }
-  }
-
   const levelChars = {
     ".": "empty", "#": "wall", "+": "lava",
     "@": Player, "o": Coin,
@@ -133,7 +133,7 @@
   console.log(`${simpleLevel.width} by ${simpleLevel.height}`);
   // → 22 by 9
 
-  function elt(name, attrs, ...children) {
+  /* function elt(name, attrs, ...children) {
     let dom = document.createElement(name);
     for (let attr of Object.keys(attrs)) {
       dom.setAttribute(attr, attrs[attr]);
@@ -172,6 +172,30 @@
     this.dom.className = `game ${state.status}`;
     this.scrollPlayerIntoView(state);
   };
+    DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
+    let width = this.dom.clientWidth;
+    let height = this.dom.clientHeight;
+    let margin = width / 3;
+
+    // The viewport
+    let left = this.dom.scrollLeft, right = left + width;
+    let top = this.dom.scrollTop, bottom = top + height;
+
+    let player = state.player;
+    let center = player.pos.plus(player.size.times(0.5))
+                          .times(scale);
+
+    if (center.x < left + margin) {
+      this.dom.scrollLeft = center.x - margin;
+    } else if (center.x > right - margin) {
+      this.dom.scrollLeft = center.x + margin - width;
+    }
+    if (center.y < top + margin) {
+      this.dom.scrollTop = center.y - margin;
+    } else if (center.y > bottom - margin) {
+      this.dom.scrollTop = center.y + margin - height;
+    }
+  };
 
   function drawActors(actors) {
     return elt("div", {}, ...actors.map(actor => {
@@ -184,7 +208,10 @@
     }));
   }
   
-
+  let simpleLevel = new Level(simpleLevelPlan);
+  let display = new DOMDisplay(document.body, simpleLevel);
+  display.syncState(State.start(simpleLevel));
+ */
   </script>
 </body>
 </html>
