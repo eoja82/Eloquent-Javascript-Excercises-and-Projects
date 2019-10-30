@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Content Negotiation</title>
+</head>
+<body>
+  <button class="text/plain">text/plain</button>
+  <p class="text/plain"></p>
+  <!--need classs like below because that is the response-->
+  <button class="text/html; charset=utf-8">text/html</button>
+  <p class="text/html; charset=utf-8"></p>
+  <button class="application/json">application/json</button>
+  <p class="application/json"></p>
+  <button class="application/rainbows+unicorns">application/rainbows+unicorns</button>
+  <p class="application/rainbows+unicorns"></p>
+
+
+  <script>
+
+    let butttons = document.querySelectorAll("button");
+    let output = document.querySelectorAll("p");
+    butttons.forEach( x => {
+      let type = x.className;
+      //console.log("class " + type);
+      async function response() {
+        let response = await fetch("https://eloquentjavascript.net/author", {headers: {accept: type}});
+        console.log("headers " + response.headers.get("content-type"));
+        let text = await response.text();
+        output.forEach( x => {
+          //console.log(x.className);
+          if (x.className == response.headers.get("content-type")) {
+              x.textContent = text;
+            }
+        })
+      }
+      x.addEventListener("click", response);
+    }) 
+  
+
+  </script>
+</body>
+</html>
