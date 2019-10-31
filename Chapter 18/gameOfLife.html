@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Conway's Game of Life</title>
+</head>
+<body>
+  <div id="grid"></div>
+  <button id="next">Next generation</button>
+  <button id="run">Auto run</button>
+  <script>
+    let grid = document.getElementById("grid");
+    const width = 30, height = 15;
+    let checkBoxes = [];
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        let checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkBox.setAttribute("checked", "");
+        grid.appendChild(checkBox);
+        checkBoxes.push(checkBox);
+      }
+      grid.appendChild(document.createElement("br"));
+    }
+    //console.log(checkBoxes);
+    function randomGrid() {
+      let i = 0;
+      while (i <= width * height) {
+        //console.log(Math.random() < 0.3);
+        checkBoxes[i].checked = Math.random() < 0.3;
+        i++;
+      }
+    }
+    randomGrid();
+    
+    document.querySelector("input").setAttribute("checked", "");
+    //console.log(document.querySelectorAll("input")[2].checked);
+
+    class Vec{
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+      }
+    }
+
+    class State {
+      constructor() {
+
+      }
+    }
+
+    
+  </script>
+</body>
+</html>
