@@ -101,6 +101,17 @@
     }
         
     document.getElementById("next").addEventListener("click", turn);
+  
+    let autoRun = null;
+    document.getElementById("run").addEventListener("click", () => {
+      
+      if (!autoRun) {
+        autoRun = setInterval(turn, 500);
+      } else {
+        clearInterval(autoRun);
+        autoRun = null;
+      }
+    });
     
     
   </script>
