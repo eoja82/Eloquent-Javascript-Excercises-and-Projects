@@ -8,8 +8,13 @@
 </head>
 <body>
   <div id="grid"></div>
-  <button id="next">Next generation</button>
-  <button id="run">Auto run</button>
+  <p>For the next generation of the randonly checked boxes click "Next Genteration."  Or let the generations run automatically by clicking "Auto Run."</p>
+  <p>If you want a blank grid click "Blank" and check boxes of you choice.  Then click "Next Generation" or "Auto Run."</p>
+  <button id="next">Next Generation</button>
+  <button id="run">Auto Run</button>
+  <button id="blank">Blank</button>
+  <button id="random">New Random Grid</button>
+
   <script>
     let grid = document.getElementById("grid");
     const width = 30, height = 15;
@@ -28,6 +33,8 @@
       for (let x = 0; x < width; x++) {
         let checkBox = document.createElement("input");
         checkBox.type = "checkbox";
+        checkBox.id = x + (y * width);
+        checkBox.className = "cell";
         grid.appendChild(checkBox);
         checkBoxes.push(checkBox);
         boxVecs.push(new Vec(x, y));
@@ -96,6 +103,15 @@
       return result;
     }
 
+    // handle user checked boxes
+    let cells = document.querySelectorAll(".cell");
+    function userChecked(event) {
+      boxVecs[event.srcElement.id].status = event.srcElement.checked;
+    }
+    cells.forEach( x => {
+      x.addEventListener("click", userChecked);
+    })
+
     function turn() {
       nextGeneration(lifeGrid());
     }
@@ -103,16 +119,34 @@
     document.getElementById("next").addEventListener("click", turn);
   
     let autoRun = null;
-    document.getElementById("run").addEventListener("click", () => {
-      
+    let runStop = document.getElementById("run");
+    runStop.addEventListener("click", () => {
       if (!autoRun) {
         autoRun = setInterval(turn, 500);
+        runStop.textContent = "Stop Auto Run";
       } else {
         clearInterval(autoRun);
         autoRun = null;
+        runStop.textContent = "Auto Run";
       }
     });
     
+    // let user start with a blank grid and check their own boxes
+    function blankGrid() {
+      let blank = [], i = 0;
+      while (i < width * height) {
+        blank.push(false);
+        i++;
+      }
+      nextGeneration(blank);
+    }
+    document.getElementById("blank").addEventListener("click", blankGrid);
+
+    // new random grid
+    function newRandom() {
+      nextGeneration(randomGrid());
+    }
+    document.getElementById("random").addEventListener("click", newRandom);
     
   </script>
 </body>
