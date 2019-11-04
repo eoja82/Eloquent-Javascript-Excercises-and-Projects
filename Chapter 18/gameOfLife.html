@@ -34,7 +34,6 @@
       }
       grid.appendChild(document.createElement("br"));
     }
-    //checkBoxes[2].removeAttribute("checked", "");
     
     function randomGrid() {
       let i = 0, result = [];
@@ -44,66 +43,57 @@
       }
       return result;
     }
-
+    // draws next grid
     function nextGeneration(values) {
       values.map( (value, i) => {
         checkBoxes[i].checked = value;
         boxVecs[i].status = value;
       })
     };
-    
+    // create starting grid 
     nextGeneration(randomGrid());
-    //document.querySelector("input").setAttribute("checked", "");
-    //console.log(document.querySelectorAll("input")[2].checked);
-    //console.log(boxVecs[449]);
-    
+    // find checkbox
     function boxVecsIndex(x1, y1) {
       let index;
       boxVecs.forEach( (z, i) => {
         if (z.x === x1 && z.y === y1) index = i; 
-      })
+      });
       return index;
     }
-
+    
     function findNeighbors(x, y, index) {
       let neighbors = 0;
       let cell = boxVecs[index];
       for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
         for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
-          
-          console.log("cell: " + `${cell.x}, ${cell.y}` + " , x1 y1: " + x1 + ", " + y1 + `, index ${index}`);
           let cellNeighbor = boxVecs[boxVecsIndex(x1, y1)];
-          console.log("cellNeighbor: " + `${cellNeighbor.x}, ${cellNeighbor.y} cn status: ${cellNeighbor.status}, ` + ` index: ${index}`);
-          console.log(`cell == cn: ${cell === cellNeighbor}`);
           if (cell === cellNeighbor) {
-            console.log("x1++");
             continue;
           } else {
             if (cellNeighbor.status) {
               neighbors++;
-              console.log(`neighbors: ${neighbors}`);
             }
           }
         }
       }
-      //console.log(`neighbors: ${neighbors}`);
       return neighbors;
     }  
-    console.log(findNeighbors(0, 0, 0));
+    // create array of booleans to draw next grid based on current grid
     function lifeGrid() {
-      let values = new Array(width * height);
+      let result = [];
       boxVecs.forEach( ({x, y, status}, index) => {
         let neighbors = findNeighbors(x, y, index);
-        //console.log(neighbors);
-        if (status) {
-          if (neighbors < 2 || neighbors > 3) values[index] = !status;
-          if (neighbors === 2 || neighbors === 3) values[index] = status;
-        } else if (!status) {
-          if (neighbors === 3) values[index] = status;
+        if (status && neighbors < 2 || status && neighbors > 3) {
+          result.push(false);
+        } else if (status && neighbors === 2 || status && neighbors === 3) {
+          result.push(true);
+        } else if (!status && neighbors === 3) {
+          result.push(true);
+        } else {
+          result.push(false);
         }
       });
-      //console.log(values);
-      return values;
+      return result;
     }
 
     function turn() {
