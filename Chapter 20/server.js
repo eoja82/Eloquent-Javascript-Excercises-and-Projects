@@ -1,5 +1,4 @@
 const {createServer} = require("http");
-const {createReadStream} = require("fs");
 
 const methods = Object.create(null);
 
@@ -39,6 +38,7 @@ function urlPath(url) {
   return path;
 }
 
+const {createReadStream} = require("fs");
 const {stat, readdir} = require("fs").promises;
 const mime = require("mime");
 
